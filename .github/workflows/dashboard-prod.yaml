@@ -23,7 +23,7 @@ jobs:
         run: |
           version=$(cat dashboard/Dockerfile | grep 'ENV PHP_VERSION' | awk '{print $3}' | sed -e 's/\./-/g')
           revision=$(git rev-parse --short ${{ github.sha }})
-          docker build dashboard --tag ghcr.io/TuaathaDeDanann/images/dashboard-$version:$revision
-          docker tag ghcr.io/TuaathaDeDanann/images/dashboard-$version:$revision ghcr.io/TuaathaDeDanann/images/dashboard:latest
-          docker push ghcr.io/TuaathaDeDanann/images/dashboard-$version:$revision
-          docker push ghcr.io/TuaathaDeDanann/images/dashboard-dev:latest
+          docker build dashboard --tag ghcr.io/tuaatha-de-danann/images/dashboard-$version:$revision
+          docker tag ghcr.io/tuaatha-de-danann/images/dashboard-$version:$revision ghcr.io/TuaathaDeDanann/images/dashboard:latest
+          docker push ghcr.io/tuaatha-de-danann/images/dashboard-$version:$revision
+          docker push ghcr.io/tuaatha-de-danann/images/dashboard-dev:latest
