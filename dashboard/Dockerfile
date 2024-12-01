@@ -257,10 +257,10 @@ RUN set -eux; \
 
 ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
 ADD config/php.ini /etc/php/php.ini
-ADD ./dev/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-ADD ./dev/config/nginx.conf /etc/nginx/nginx.conf
-ADD ./dev/config/default.conf /etc/nginx/conf.d/nginx.conf
-ADD ./dev/config/fpm-pool.conf /etc/php/pools/pool.conf
+ADD config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD config/nginx.conf /etc/nginx/nginx.conf
+ADD config/default.conf /etc/nginx/conf.d/nginx.conf
+ADD config/fpm-pool.conf /etc/php/pools/pool.conf
 
 STOPSIGNAL SIGQUIT
 
