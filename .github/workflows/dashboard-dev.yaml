@@ -2,7 +2,10 @@ name: Build and Upload Dashboard Image to GHCR
 
 on:
   push:
-    branches: [ "dev" ]
+    branches:
+      - dev
+    paths:
+      - dashboard/**
   workflow_dispatch:
 
 jobs:
