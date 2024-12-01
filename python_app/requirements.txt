@@ -1,6 +1,7 @@
 python-telegram-bot==21.8
 discord.py==2.4.0
 requests==2.32.0
-aioredis>=2.0.0
 python-dotenv>=1.0.0
+redis=>5.2.0
+asyncio>=3.4.0
 setuptools>=75.6.0
