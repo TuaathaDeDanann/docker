@@ -1,4 +1,4 @@
-FROM python:3.21-slim
+FROM python:3.12-slim
 
 LABEL org.opencontainers.image.authors="NorAmarth<https://github.com/TuaathaDeDanann>"
 
