@@ -232,7 +232,6 @@ RUN set -eux; \
     echo "opcache.jit_buffer_size=100M" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "opcache.jit=1255" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "extension = redis.so " > $PHP_INI_DIR/conf.d/20-redis.ini; \
-    echo "extension = amqp.so " > $PHP_INI_DIR/conf.d/15-amqp.ini; \
     apt-mark auto '.*' > /dev/null; \
     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
     find /usr/local -type f -executable -exec ldd '{}' ';' \
