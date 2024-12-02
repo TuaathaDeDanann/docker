@@ -5,7 +5,7 @@ on:
     branches:
       - dev
     paths:
-      - python_app/**
+      - bots/telegram/**
   workflow_dispatch:
 
 jobs:
@@ -24,9 +24,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build the dashboard docker image
         run: |
-          version=$(cat dashboard/Dockerfile | grep 'ENV PHP_VERSION' | awk '{print $3}' | sed -e 's/\./-/g')
+          version=$(cat bots/telegram/Dockerfile | grep FROM | awk -F':' '{print $2}' | awk -F'-' '{print $1}')
           revision=$(git rev-parse --short ${{ github.sha }})
-          docker build python_app --tag ghcr.io/tuaathadedanann/images/bot-$version-dev:$revision
-          docker tag ghcr.io/tuaathadedanann/images/bot-$version-dev:$revision ghcr.io/tuaathadedanann/images/bot-dev:latest
-          docker push ghcr.io/tuaathadedanann/images/bot-$version-dev:$revision
-          docker push ghcr.io/tuaathadedanann/images/bot-dev:latest
+          docker build bots/telegram --tag ghcr.io/tuaathadedanann/images/tdd-telegram-$version-dev:$revision
+          docker tag ghcr.io/tuaathadedanann/images/tdd-telegram-$version-dev:$revision ghcr.io/tuaathadedanann/images/tdd-telegram-dev:latest
+          docker push ghcr.io/tuaathadedanann/images/tdd-telegram-$version-dev:$revision
+          docker push ghcr.io/tuaathadedanann/images/tdd-telegram-dev:latest
