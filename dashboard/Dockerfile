@@ -259,7 +259,13 @@ RUN set -eux; \
     && touch /var/log/php/error.log \
     && chown -R app:app /var/log/php;
 
+
+ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
 ADD config/php.ini /etc/php/php.ini
+ADD config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD config/nginx.conf /etc/nginx/nginx.conf
+ADD config/default.conf /etc/nginx/conf.d/nginx.conf
+ADD config/fpm-pool.conf /etc/php/pools/pool.conf
 
 STOPSIGNAL SIGQUIT
 
@@ -267,4 +273,5 @@ WORKDIR /app
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-CMD ["php", "bin/console", "messenger:consume", "--all", "--memory-limit=128M", "--time-limit=3600", "--failure-limit=10"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1/fpm-ping || exit 1
