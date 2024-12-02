@@ -265,5 +265,7 @@ STOPSIGNAL SIGQUIT
 
 WORKDIR /app
 
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1/fpm-ping || exit 1
