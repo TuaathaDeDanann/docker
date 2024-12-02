@@ -20,5 +20,7 @@ ADD requirements.txt /app/requirements.txt
 WORKDIR /app
 RUN pip install -r requirements.txt --root-user-action=ignore
 
+STOPSIGNAL SIGQUIT
+
 CMD ["python", "bot.py"]
 
