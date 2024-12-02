@@ -1,0 +1,32 @@
+name: Build and Upload Development Telegram Bot Image to GHCR
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - bots/telegram/**
+  workflow_dispatch:
+
+jobs:
+  publish-telegram-subject-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Build the dashboard docker image
+        run: |
+          version=$(cat bots/telegram/Dockerfile | grep FROM | awk -F':' '{print $2}' | awk -F'-' '{print $1}')
+          revision=$(git rev-parse --short ${{ github.sha }})
+          docker build bots/telegram --tag ghcr.io/tuaathadedanann/images/tdd-telegram-$version-dev:$revision
+          docker tag ghcr.io/tuaathadedanann/images/tdd-telegram-$version-dev:$revision ghcr.io/tuaathadedanann/images/tdd-telegram-dev:latest
+          docker push ghcr.io/tuaathadedanann/images/tdd-telegram-$version-dev:$revision
+          docker push ghcr.io/tuaathadedanann/images/tdd-telegram-dev:latest

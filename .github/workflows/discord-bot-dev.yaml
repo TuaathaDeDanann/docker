@@ -1,0 +1,32 @@
+name: Build and Upload Development Discord Bot Image to GHCR
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - bots/discord/**
+  workflow_dispatch:
+
+jobs:
+  publish-discord-subject-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Build the dashboard docker image
+        run: |
+          version=$(cat bots/discord/Dockerfile | grep FROM | awk -F':' '{print $2}' | awk -F'-' '{print $1}')
+          revision=$(git rev-parse --short ${{ github.sha }})
+          docker build bots/discord --tag ghcr.io/tuaathadedanann/images/tdd-discord-$version-dev:$revision
+          docker tag ghcr.io/tuaathadedanann/images/tdd-discord-$version-dev:$revision ghcr.io/tuaathadedanann/images/tdd-discord-dev:latest
+          docker push ghcr.io/tuaathadedanann/images/tdd-discord-$version-dev:$revision
+          docker push ghcr.io/tuaathadedanann/images/tdd-discord-dev:latest

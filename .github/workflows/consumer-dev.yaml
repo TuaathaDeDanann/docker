@@ -1,0 +1,32 @@
+name: Build and Upload Consumer Image to GHCR
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - consumer/**
+  workflow_dispatch:
+
+jobs:
+  publish-consumer-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Build the dashboard docker image
+        run: |
+          version=$(cat consumer/Dockerfile | grep 'ENV PHP_VERSION' | awk '{print $3}' | sed -e 's/\./-/g')
+          revision=$(git rev-parse --short ${{ github.sha }})
+          docker build consumer --tag ghcr.io/tuaathadedanann/images/consumer-$version-dev:$revision
+          docker tag ghcr.io/tuaathadedanann/images/consumer-$version-dev:$revision ghcr.io/tuaathadedanann/images/consumer-dev:latest
+          docker push ghcr.io/tuaathadedanann/images/consumer-$version-dev:$revision
+          docker push ghcr.io/tuaathadedanann/images/consumer-dev:latest

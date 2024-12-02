@@ -31,7 +31,9 @@ ARG PHP_RUNTIME_DEPS="\
         libxml2 \
         libc-client2007e \
         librabbitmq4 \
-        unzip"
+        unzip \
+        nginx \
+        supervisor"
 ARG APP_DIR=/app
 ARG PHP_INI_DIR=/etc/php
 ARG PHP_DOWNLOAD_DIR=/usr/local/src/tarballs
@@ -71,6 +73,7 @@ ARG PHP_CONFIG_OPTIONS="\
     --disable-all \
     --enable-option-checking=fatal \
     --enable-cli \
+    --enable-fpm \
     --enable-bcmath \
     --enable-ctype \
     --enable-dom \
@@ -187,7 +190,6 @@ RUN set -eux; \
     git clone -q https://github.com/phpredis/phpredis.git --branch 5.3.7 phpredis; \
     git clone -q https://github.com/krakjoe/apcu.git apcu; \
     git clone -q https://github.com/php/pecl-file_formats-yaml.git yaml; \
-    git clone -q https://github.com/php-amqp/php-amqp.git amqp; \
     cd $MODULES_DOWNLOAD_DIR/igbinary; \
     phpize; \
     ./configure CFLAGS="-O2 -g" \
@@ -216,13 +218,6 @@ RUN set -eux; \
     make -j "$(nproc)"; \
     find -type f -name '*.a' -delete; \
     make install; \
-     cd $MODULES_DOWNLOAD_DIR/amqp; \
-        phpize; \
-        ./configure \
-            --with-amqp ;\
-        make -j "$(nproc)"; \
-        find -type f -name '*.a' -delete; \
-        make install; \
     cd / ;\
     rm -rf $PHP_SOURCE_DIR; \
     rm -rf $PHP_COMPILE_DIR; \
@@ -237,7 +232,6 @@ RUN set -eux; \
     echo "opcache.jit_buffer_size=100M" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "opcache.jit=1255" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "extension = redis.so " > $PHP_INI_DIR/conf.d/20-redis.ini; \
-    echo "extension = amqp.so " > $PHP_INI_DIR/conf.d/15-amqp.ini; \
     apt-mark auto '.*' > /dev/null; \
     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
     find /usr/local -type f -executable -exec ldd '{}' ';' \
@@ -259,13 +253,7 @@ RUN set -eux; \
     && touch /var/log/php/error.log \
     && chown -R app:app /var/log/php;
 
-
-ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
 ADD config/php.ini /etc/php/php.ini
-ADD config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-ADD config/nginx.conf /etc/nginx/nginx.conf
-ADD config/default.conf /etc/nginx/conf.d/nginx.conf
-ADD config/fpm-pool.conf /etc/php/pools/pool.conf
 
 STOPSIGNAL SIGQUIT
 
@@ -273,5 +261,4 @@ WORKDIR /app
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1/fpm-ping || exit 1
+CMD ["php", "bin/console", "messenger:consume", "--all", "--memory-limit=128M", "--time-limit=3600", "--failure-limit=10"]
