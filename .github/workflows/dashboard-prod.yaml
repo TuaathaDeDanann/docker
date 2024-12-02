@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-php-images:
+  publish-dashboard-prod-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read

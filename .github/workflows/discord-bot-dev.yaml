@@ -1,4 +1,4 @@
-name: Build and Upload Development Bot Image to GHCR
+name: Build and Upload Development Discord Bot Image to GHCR
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-python-images:
+  publish-discord-subject-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read

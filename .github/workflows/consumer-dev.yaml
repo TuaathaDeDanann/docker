@@ -1,4 +1,4 @@
-name: Build and Upload Dashboard Image to GHCR
+name: Build and Upload Consumer Image to GHCR
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-php-images:
+  publish-consumer-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read
