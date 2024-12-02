@@ -187,7 +187,6 @@ RUN set -eux; \
     git clone -q https://github.com/phpredis/phpredis.git --branch 5.3.7 phpredis; \
     git clone -q https://github.com/krakjoe/apcu.git apcu; \
     git clone -q https://github.com/php/pecl-file_formats-yaml.git yaml; \
-    git clone -q https://github.com/php-amqp/php-amqp.git amqp; \
     cd $MODULES_DOWNLOAD_DIR/igbinary; \
     phpize; \
     ./configure CFLAGS="-O2 -g" \
@@ -216,13 +215,6 @@ RUN set -eux; \
     make -j "$(nproc)"; \
     find -type f -name '*.a' -delete; \
     make install; \
-     cd $MODULES_DOWNLOAD_DIR/amqp; \
-        phpize; \
-        ./configure \
-            --with-amqp ;\
-        make -j "$(nproc)"; \
-        find -type f -name '*.a' -delete; \
-        make install; \
     cd / ;\
     rm -rf $PHP_SOURCE_DIR; \
     rm -rf $PHP_COMPILE_DIR; \
@@ -237,7 +229,6 @@ RUN set -eux; \
     echo "opcache.jit_buffer_size=100M" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "opcache.jit=1255" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "extension = redis.so " > $PHP_INI_DIR/conf.d/20-redis.ini; \
-    echo "extension = amqp.so " > $PHP_INI_DIR/conf.d/15-amqp.ini; \
     apt-mark auto '.*' > /dev/null; \
     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
     find /usr/local -type f -executable -exec ldd '{}' ';' \
