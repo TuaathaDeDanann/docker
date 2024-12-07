@@ -31,9 +31,13 @@ ARG PHP_RUNTIME_DEPS="\
         libxml2 \
         libc-client2007e \
         librabbitmq4 \
-        unzip \
-        nginx \
-        supervisor"
+        libpng16-16 \
+        libjpeg62-turbo \
+        libwebp7 \
+        libfreetype6 \
+        libpq5 \
+        libzip4 \
+        unzip"
 ARG APP_DIR=/app
 ARG PHP_INI_DIR=/etc/php
 ARG PHP_DOWNLOAD_DIR=/usr/local/src/tarballs
@@ -73,7 +77,6 @@ ARG PHP_CONFIG_OPTIONS="\
     --disable-all \
     --enable-option-checking=fatal \
     --enable-cli \
-    --enable-fpm \
     --enable-bcmath \
     --enable-ctype \
     --enable-dom \

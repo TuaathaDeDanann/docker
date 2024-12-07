@@ -31,6 +31,12 @@ ARG PHP_RUNTIME_DEPS="\
         libxml2 \
         libc-client2007e \
         librabbitmq4 \
+        libpng16-16 \
+        libjpeg62-turbo \
+        libwebp7 \
+        libfreetype6 \
+        libpq5 \
+        libzip4 \
         unzip \
         supervisor \
         nginx"
