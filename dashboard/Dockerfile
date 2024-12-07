@@ -181,7 +181,7 @@ RUN set -eux; \
     mkdir -p $MODULES_DOWNLOAD_DIR; \
     cd $MODULES_DOWNLOAD_DIR; \
     git clone -q https://github.com/igbinary/igbinary.git igbinary; \
-    git clone -q https://github.com/phpredis/phpredis.git --branch 5.3.7 phpredis; \
+    git clone -q --recurse-submodules https://github.com/phpredis/phpredis.git --branch phpredis; \
     git clone -q https://github.com/krakjoe/apcu.git apcu; \
     git clone -q https://github.com/php/pecl-file_formats-yaml.git yaml; \
     cd $MODULES_DOWNLOAD_DIR/igbinary; \
