@@ -31,7 +31,9 @@ ARG PHP_RUNTIME_DEPS="\
         libxml2 \
         libc-client2007e \
         librabbitmq4 \
-        unzip"
+        unzip \
+        supervisor \
+        nginx"
 ARG APP_DIR=/app
 ARG PHP_INI_DIR=/etc/php
 ARG PHP_DOWNLOAD_DIR=/usr/local/src/tarballs
