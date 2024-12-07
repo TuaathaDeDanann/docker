@@ -1,6 +1,6 @@
 FROM debian:stable-slim
 
-ENV PHP_VERSION 8.2.21
+ENV PHP_VERSION 8.4.1
 
 LABEL org.opencontainers.image.authors="NorAmarth<https://github.com/TuaathaDeDanann>"
 
