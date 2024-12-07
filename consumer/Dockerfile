@@ -184,7 +184,7 @@ RUN set -eux; \
     mkdir -p $MODULES_DOWNLOAD_DIR; \
     cd $MODULES_DOWNLOAD_DIR; \
     git clone -q https://github.com/igbinary/igbinary.git igbinary; \
-    git clone -q https://github.com/phpredis/phpredis.git phpredis; \
+    git clone -q --recurse-submodules https://github.com/phpredis/phpredis.git phpredis; \
     git clone -q https://github.com/krakjoe/apcu.git apcu; \
     git clone -q https://github.com/php/pecl-file_formats-yaml.git yaml; \
     git clone -q https://github.com/php-amqp/php-amqp.git amqp; \
