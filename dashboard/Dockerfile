@@ -271,6 +271,8 @@ ADD config/nginx.conf /etc/nginx/nginx.conf
 ADD config/default.conf /etc/nginx/conf.d/nginx.conf
 ADD config/fpm-pool.conf /etc/php/pools/pool.conf
 
+ENV PATH="/root/.nvm/versions/node/v22.12.0/bin:$PATH"
+
 STOPSIGNAL SIGQUIT
 
 WORKDIR /app
