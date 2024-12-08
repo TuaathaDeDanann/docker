@@ -253,7 +253,11 @@ RUN set -eux; \
     && touch /var/log/php/access.log \
     && touch /var/log/php/global.log \
     && touch /var/log/php/error.log \
-    && chown -R app:app /var/log/php;
+    && chown -R app:app /var/log/php; \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash \
+    && nvm install 22 \
+    && npm install yarn;
+
 
 
 ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
