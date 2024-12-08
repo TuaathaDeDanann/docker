@@ -123,6 +123,8 @@ ARG PHP_CONFIG_OPTIONS="\
     --with-zlib \
     --with-webp"
 
+SHELL ["/bin/bash", "-c"]
+
 RUN set -eux; \
 	{ \
 		echo 'Package: php*' \
@@ -257,9 +259,9 @@ RUN set -eux; \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash \
     && source ~/.bashrc \
     && nvm install 22 \
-    && npm install yarn;
-
-
+    && npm cache clean --force \
+    && rm -rf node_modules \
+    && npm install -g yarn;
 
 ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
 ADD config/php.ini /etc/php/php.ini
