@@ -79,6 +79,7 @@ ARG PHP_CONFIG_OPTIONS="\
     --disable-all \
     --enable-option-checking=fatal \
     --enable-cli \
+    --enable-fpm \
     --enable-bcmath \
     --enable-ctype \
     --enable-dom \
