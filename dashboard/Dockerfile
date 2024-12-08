@@ -255,6 +255,7 @@ RUN set -eux; \
     && touch /var/log/php/error.log \
     && chown -R app:app /var/log/php; \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash \
+    && source ~/.bashrc \
     && nvm install 22 \
     && npm install yarn;
 
