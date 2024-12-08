@@ -1,6 +1,6 @@
 FROM debian:stable-slim
 
-ENV PHP_VERSION 8.2.21
+ENV PHP_VERSION 8.4.1
 
 LABEL org.opencontainers.image.authors="NorAmarth<https://github.com/TuaathaDeDanann>"
 
@@ -31,7 +31,15 @@ ARG PHP_RUNTIME_DEPS="\
         libxml2 \
         libc-client2007e \
         librabbitmq4 \
-        unzip"
+        libpng16-16 \
+        libjpeg62-turbo \
+        libwebp7 \
+        libfreetype6 \
+        libpq5 \
+        libzip4 \
+        unzip \
+        supervisor \
+        nginx"
 ARG APP_DIR=/app
 ARG PHP_INI_DIR=/etc/php
 ARG PHP_DOWNLOAD_DIR=/usr/local/src/tarballs
@@ -101,11 +109,8 @@ ARG PHP_CONFIG_OPTIONS="\
     --with-curl \
     --with-freetype \
     --with-gmp \
-    --with-imap \
-    --with-imap-ssl \
     --with-iconv \
     --with-jpeg \
-    --with-kerberos \
     --with-libedit \
     --with-libxml \
     --with-mhash \
@@ -118,6 +123,8 @@ ARG PHP_CONFIG_OPTIONS="\
     --with-zip \
     --with-zlib \
     --with-webp"
+
+SHELL ["/bin/bash", "-c"]
 
 RUN set -eux; \
 	{ \
@@ -185,10 +192,9 @@ RUN set -eux; \
     mkdir -p $MODULES_DOWNLOAD_DIR; \
     cd $MODULES_DOWNLOAD_DIR; \
     git clone -q https://github.com/igbinary/igbinary.git igbinary; \
-    git clone -q https://github.com/phpredis/phpredis.git --branch 5.3.7 phpredis; \
+    git clone -q --recurse-submodules https://github.com/phpredis/phpredis.git phpredis; \
     git clone -q https://github.com/krakjoe/apcu.git apcu; \
     git clone -q https://github.com/php/pecl-file_formats-yaml.git yaml; \
-    git clone -q https://github.com/php-amqp/php-amqp.git amqp; \
     cd $MODULES_DOWNLOAD_DIR/igbinary; \
     phpize; \
     ./configure CFLAGS="-O2 -g" \
@@ -217,13 +223,6 @@ RUN set -eux; \
     make -j "$(nproc)"; \
     find -type f -name '*.a' -delete; \
     make install; \
-     cd $MODULES_DOWNLOAD_DIR/amqp; \
-        phpize; \
-        ./configure \
-            --with-amqp ;\
-        make -j "$(nproc)"; \
-        find -type f -name '*.a' -delete; \
-        make install; \
     cd / ;\
     rm -rf $PHP_SOURCE_DIR; \
     rm -rf $PHP_COMPILE_DIR; \
@@ -238,7 +237,6 @@ RUN set -eux; \
     echo "opcache.jit_buffer_size=100M" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "opcache.jit=1255" >> $PHP_INI_DIR/conf.d/10-jit.ini; \
     echo "extension = redis.so " > $PHP_INI_DIR/conf.d/20-redis.ini; \
-    echo "extension = amqp.so " > $PHP_INI_DIR/conf.d/15-amqp.ini; \
     apt-mark auto '.*' > /dev/null; \
     [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
     find /usr/local -type f -executable -exec ldd '{}' ';' \
@@ -258,8 +256,13 @@ RUN set -eux; \
     && touch /var/log/php/access.log \
     && touch /var/log/php/global.log \
     && touch /var/log/php/error.log \
-    && chown -R app:app /var/log/php;
-
+    && chown -R app:app /var/log/php; \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash \
+    && source ~/.bashrc \
+    && nvm install 22 \
+    && npm cache clean --force \
+    && rm -rf node_modules \
+    && npm install -g yarn;
 
 ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
 ADD config/php.ini /etc/php/php.ini
