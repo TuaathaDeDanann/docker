@@ -89,6 +89,7 @@ ARG PHP_CONFIG_OPTIONS="\
     --enable-intl \
     --enable-filter \
     --enable-mbstring \
+    --enable-mysqlnd \
     --enable-opcache \
     --enable-opcache-jit \
     --enable-pcntl \
@@ -118,6 +119,7 @@ ARG PHP_CONFIG_OPTIONS="\
     --with-password-argon2 \
     --with-pcre-jit \
     --with-pgsql \
+    --with-pdo-mysql \
     --with-pdo-pgsql \
     --with-sodium=shared \
     --with-zip \
