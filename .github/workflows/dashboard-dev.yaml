@@ -30,3 +30,4 @@ jobs:
           docker tag ghcr.io/tuaathadedanann/images/dashboard-$version-dev:$revision ghcr.io/tuaathadedanann/images/dashboard-dev:latest
           docker push ghcr.io/tuaathadedanann/images/dashboard-$version-dev:$revision
           docker push ghcr.io/tuaathadedanann/images/dashboard-dev:latest
+          
