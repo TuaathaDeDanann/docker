@@ -1,6 +1,7 @@
 FROM debian:stable-slim
 
 ENV PHP_VERSION 8.4.1
+ENV NODE_VERSION 22.13.1
 
 LABEL org.opencontainers.image.authors="NorAmarth<https://github.com/TuaathaDeDanann>"
 
@@ -259,12 +260,13 @@ RUN set -eux; \
     && touch /var/log/php/global.log \
     && touch /var/log/php/error.log \
     && chown -R app:app /var/log/php; \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash \
-    && source ~/.bashrc \
-    && nvm install 22 \
-    && npm cache clean --force \
-    && rm -rf node_modules \
-    && npm install -g yarn;
+    && ARCH= && dpkgArch="$(dpkg --print-architecture)"
+    && url -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
+    && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+    && node --version \
+    && npm --version  
 
 ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
 ADD config/php.ini /etc/php/php.ini
