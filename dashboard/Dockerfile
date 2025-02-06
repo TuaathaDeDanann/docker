@@ -1,6 +1,7 @@
 FROM debian:stable-slim
 
 ENV PHP_VERSION 8.4.1
+ENV NODE_VERSION 22.13.1
 
 LABEL org.opencontainers.image.authors="NorAmarth<https://github.com/TuaathaDeDanann>"
 
@@ -261,10 +262,11 @@ RUN set -eux; \
     && chown -R app:app /var/log/php; \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash \
     && source ~/.bashrc \
-    && nvm install 22 \
+    && nvm install $NODE_VERSION \
     && npm cache clean --force \
     && rm -rf node_modules \
-    && npm install -g yarn;
+    && npm install -g yarn \
+    && ln -s /root/.nvm/versions/node/v$NODE_VERSION/bin/* /usr/local/bin
 
 ADD config/php-fpm.conf /usr/local/etc/php-fpm.conf
 ADD config/php.ini /etc/php/php.ini
@@ -273,7 +275,7 @@ ADD config/nginx.conf /etc/nginx/nginx.conf
 ADD config/default.conf /etc/nginx/conf.d/nginx.conf
 ADD config/fpm-pool.conf /etc/php/pools/pool.conf
 
-ENV PATH="/root/.nvm/versions/node/v22.12.0/bin:$PATH"
+ENV PATH="/root/.nvm/versions/node/v$NODE_VERSION/bin:$PATH"
 
 STOPSIGNAL SIGQUIT
 
